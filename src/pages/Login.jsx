@@ -1,46 +1,44 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+
 import {
   signInWithGoogle,
   getGoogleRedirectResult,
 } from "../services/authService";
 
+import { useNavigate } from "react-router-dom";
+
 function Login() {
 
   const navigate = useNavigate();
+
   useEffect(() => {
 
-  const checkLogin = async () => {
+    const checkLogin = async () => {
 
-    const user =
-      await getGoogleRedirectResult();
+      const user =
+        await getGoogleRedirectResult();
 
-    if (user) {
+      if (user) {
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(user)
-      );
+        localStorage.setItem(
+          "user",
+          JSON.stringify(user)
+        );
 
-      navigate("/");
+        window.location.href = "/";
 
-    }
+      }
 
-  };
+    };
 
-  checkLogin();
+    checkLogin();
 
-}, []);
+  }, []);
+
   const handleGoogleLogin = async () => {
 
-    const user = await signInWithGoogle();
+    await signInWithGoogle();
 
-    localStorage.setItem(
-      "user",
-      JSON.stringify(user)
-    );
-
-    navigate("/");
   };
 
   return (
@@ -53,11 +51,7 @@ function Login() {
       }}
     >
 
-      {/* OVERLAY */}
-
       <div className="absolute inset-0 bg-black/45"></div>
-
-      {/* CARD */}
 
       <div className="relative z-10 w-full max-w-lg bg-white/20 backdrop-blur-xl border border-white/20 rounded-[34px] p-10 shadow-2xl text-center">
 
