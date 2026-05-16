@@ -18,8 +18,12 @@ function App() {
         {/* HOME */}
 
         <Route
-          path="/"
-          element={<Home />}
+            path="/"
+            element={
+              localStorage.getItem("user")
+                ? <Home />
+                : <Login />
+          }
         />
 
         {/* LOGIN */}
