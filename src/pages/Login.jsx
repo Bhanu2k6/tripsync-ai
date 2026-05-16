@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 
-import {
-  signInWithGoogle,
-  getGoogleRedirectResult,
-} from "../services/authService";
+import { signInWithGoogle } from "../services/authService";
 
 import { useNavigate } from "react-router-dom";
+
+import { onAuthStateChanged } from "firebase/auth";
+
+import { auth } from "../services/firebase";
 
 function Login() {
 
@@ -13,25 +14,23 @@ function Login() {
 
   useEffect(() => {
 
-    const checkLogin = async () => {
+    const unsubscribe =
+      onAuthStateChanged(auth, (user) => {
 
-      const user =
-        await getGoogleRedirectResult();
+        if (user) {
 
-      if (user) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify(user)
+          );
 
-        localStorage.setItem(
-          "user",
-          JSON.stringify(user)
-        );
+          navigate("/");
 
-        window.location.href = "/";
+        }
 
-      }
+      });
 
-    };
-
-    checkLogin();
+    return () => unsubscribe();
 
   }, []);
 
