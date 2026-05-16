@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { getWeather } from "../services/weatherService";
-import { getPlaces } from "../services/placeService";
 import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
 
 function TripDetails() {
 
   const [weather, setWeather] = useState(null);
-
-  const [places, setPlaces] = useState([]);
 
   const destinationImages = {
     paris:
@@ -41,11 +38,6 @@ function TripDetails() {
       getWeather(trip.destination)
         .then((data) => {
           setWeather(data);
-        });
-
-      getPlaces(trip.destination)
-        .then((data) => {
-          setPlaces(data || []);
         });
 
     }
@@ -113,39 +105,40 @@ function TripDetails() {
 
   const handleDownload = () => {
 
-  const doc = new jsPDF();
+    const doc = new jsPDF();
 
-  doc.setFont("helvetica", "bold");
+    doc.setFont("helvetica", "bold");
 
-  doc.setFontSize(22);
+    doc.setFontSize(22);
 
-  doc.text(
-    `${trip.destination} Trip Plan`,
-    20,
-    25
-  );
-
-  doc.setFont("helvetica", "normal");
-
-  doc.setFontSize(13);
-
-  const splitText =
-    doc.splitTextToSize(
-      trip.aiPlan ||
-      "No itinerary available",
-      170
+    doc.text(
+      `${trip.destination} Trip Plan`,
+      20,
+      25
     );
 
-  doc.text(splitText, 20, 45);
+    doc.setFont("helvetica", "normal");
 
-  doc.save(
-    `${trip.destination}-trip.pdf`
-  );
-};
+    doc.setFontSize(13);
+
+    const splitText =
+      doc.splitTextToSize(
+        trip.aiPlan ||
+        "No itinerary available",
+        170
+      );
+
+    doc.text(splitText, 20, 45);
+
+    doc.save(
+      `${trip.destination}-trip.pdf`
+    );
+  };
 
   return (
 
     <div className="min-h-screen bg-[#faf7f2] pt-28 px-6 pb-16">
+
       <Navbar />
 
       <div className="max-w-6xl mx-auto">
@@ -262,80 +255,6 @@ function TripDetails() {
 
         </div>
 
-        {/* NEARBY PLACES */}
-
-        <div className="mb-14">
-
-          <h2 className="text-3xl font-bold text-neutral-800 mb-8">
-
-            📍 Nearby Places
-
-          </h2>
-
-          {places.length === 0 ? (
-
-            <div className="bg-white rounded-[24px] p-6 border border-orange-100 shadow-sm">
-
-              <p className="text-lg text-neutral-500">
-
-                No nearby places found.
-
-              </p>
-
-            </div>
-
-          ) : (
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-              {places.map((place, index) => {
-
-                const properties =
-                  place?.properties || {};
-
-                return (
-
-                  <div
-                    key={index}
-                    className="bg-white rounded-[24px] p-5 border border-orange-100 shadow-sm hover:shadow-xl transition"
-                  >
-
-                    <h3 className="text-xl font-bold text-neutral-800 mb-2">
-
-                      {properties.name || "Popular Spot"}
-
-                    </h3>
-
-                    <p className="text-base text-neutral-500 mb-3">
-
-                      {
-                        properties.categories?.[0]
-                          ?.replace(".", " ")
-                        || "Tourist Attraction"
-                      }
-
-                    </p>
-
-                    <p className="text-sm text-neutral-400">
-
-                      📍 {
-                        properties.address_line2
-                        || trip.destination
-                      }
-
-                    </p>
-
-                  </div>
-
-                );
-              })}
-
-            </div>
-
-          )}
-
-        </div>
-
         {/* ITINERARY */}
 
         <div className="space-y-6">
@@ -346,37 +265,65 @@ function TripDetails() {
               line.toLowerCase().trim();
 
             const isDay =
-              lower.startsWith("day");
+  lower.startsWith("day");
 
-            const isMorning =
-              lower.startsWith("morning");
+const isMorning =
+  lower.startsWith("morning");
 
-            const isAfternoon =
-              lower.startsWith("afternoon");
+const isAfternoon =
+  lower.startsWith("afternoon");
 
-            const isEvening =
-              lower.startsWith("evening");
+const isEvening =
+  lower.startsWith("evening");
 
-            const isHotels =
-              lower.includes("hotels");
+const isHotels =
+  lower.startsWith("recommended hotels") ||
+  lower.startsWith("hotels");
 
-            const isRestaurants =
-              lower.includes("restaurants");
+const isRestaurants =
+  lower.startsWith("restaurants");
 
-            const isTips =
-              lower.includes("travel tips");
+const isTips =
+  lower.startsWith("travel tips");
 
-            const isBestTime =
-              lower.includes("best time");
+const isBestTime =
+  lower.startsWith("best time");
 
-            const isCurrency =
-              lower.includes("currency");
+const isCurrency =
+  lower.startsWith("currency");
 
-            const isLanguage =
-              lower.includes("language");
+const isLanguage =
+  lower.startsWith("language");
 
-            const isPacking =
-              lower.includes("packing");
+const isPacking =
+  lower.includes("packing");
+
+const cleanedLine = line
+  .replace("Best Time:", "")
+  .replace("Currency:", "")
+  .replace("Language:", "")
+  .replace("Packing:", "")
+  .replace("Hotels:", "")
+  .replace("Recommended Hotels:", "")
+  .replace("Restaurants:", "")
+  .replace("Restaurants/Cafes:", "")
+  .replace("Travel Tips:", "")
+  .replace("🏨 Recommended Hotels", "")
+  .replace("🍜 Restaurants & Cafes", "")
+  .replace("🌍 Travel Tips", "")
+  .trim();
+
+            if (
+              lower === "best time:" ||
+              lower === "currency:" ||
+              lower === "language:" ||
+              lower === "restaurants/cafes:" ||
+              lower === "travel tips:" ||
+              lower === "hotels:" ||
+              lower === "packing:"
+            ) {
+              return null;
+            }
 
             if (isDay) {
 
@@ -489,7 +436,14 @@ function TripDetails() {
 
                   <p className="text-lg text-blue-800 leading-relaxed">
 
-                    {line}
+                    {cleanedLine
+  .split(",")
+  .filter((item) => item.trim() !== "")
+  .map((item, i) => (
+    <p key={i} className="mb-2">
+      • {item.trim()}
+    </p>
+))}
 
                   </p>
 
@@ -515,7 +469,14 @@ function TripDetails() {
 
                   <p className="text-lg text-pink-800 leading-relaxed">
 
-                    {line}
+                    {cleanedLine
+  .split(",")
+  .filter((item) => item.trim() !== "")
+  .map((item, i) => (
+    <p key={i} className="mb-2">
+      • {item.trim()}
+    </p>
+))}
 
                   </p>
 
@@ -541,7 +502,14 @@ function TripDetails() {
 
                   <p className="text-lg text-green-800 leading-relaxed">
 
-                    {line}
+                    {cleanedLine
+  .split(",")
+  .filter((item) => item.trim() !== "")
+  .map((item, i) => (
+    <p key={i} className="mb-2">
+      • {item.trim()}
+    </p>
+))  }
 
                   </p>
 
@@ -567,7 +535,7 @@ function TripDetails() {
 
                   <p className="text-lg text-cyan-800 leading-relaxed">
 
-                    {line}
+                    {cleanedLine}
 
                   </p>
 
@@ -593,7 +561,7 @@ function TripDetails() {
 
                   <p className="text-lg text-emerald-800 leading-relaxed">
 
-                    {line}
+                    {cleanedLine}
 
                   </p>
 
@@ -619,7 +587,7 @@ function TripDetails() {
 
                   <p className="text-lg text-indigo-800 leading-relaxed">
 
-                    {line}
+                    {cleanedLine}
 
                   </p>
 
@@ -645,7 +613,14 @@ function TripDetails() {
 
                   <p className="text-lg text-amber-800 leading-relaxed">
 
-                    {line}
+                    {cleanedLine
+  .split(",")
+  .filter((item) => item.trim() !== "")
+  .map((item, i) => (
+    <p key={i} className="mb-2">
+      • {item.trim()}
+    </p>
+))}
 
                   </p>
 
@@ -653,6 +628,7 @@ function TripDetails() {
 
               );
             }
+
             return (
 
               <div
