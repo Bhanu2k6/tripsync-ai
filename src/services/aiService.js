@@ -9,13 +9,19 @@ export const generateAITrip = async (
 
   try {
 
-    const prompt = `
-Create a detailed ${tripData.days}-day travel itinerary for ${tripData.destination}
+const prompt = `
+Create a COMPLETE detailed ${tripData.days}-day travel itinerary for ${tripData.destination}
 for ${tripData.travelers} travelers with a ${tripData.budget} budget and a ${tripData.mood} vibe.
 
-Format clearly and neatly.
+VERY IMPORTANT:
+- Generate ALL ${tripData.days} days completely.
+- Do NOT stop at 2 or 3 days.
+- Every day must contain Morning, Afternoon, and Evening plans.
+- Use clean formatting.
+- Use bullet points.
+- Keep recommendations realistic and tourist-friendly.
 
-For each day include:
+Format EXACTLY like this:
 
 Day 1
 Morning:
@@ -30,16 +36,32 @@ Evening:
 - activity
 - activity
 
-Then include separate sections in bullet points:
+Day 2
+Morning:
+- activity
+- activity
+
+Afternoon:
+- activity
+- activity
+
+Evening:
+- activity
+- activity
+
+Continue this format UNTIL Day ${tripData.days}.
+
+Then ALWAYS include these EXACT headings:
 
 Best Time:
-- best season/months to visit
+- best season
+- weather info
 
 Currency:
-- local currency used
+- local currency
 
 Language:
-- main language spoken
+- main language
 
 Packing:
 - item
@@ -47,19 +69,24 @@ Packing:
 - item
 
 Recommended Hotels:
-- hotel 1
-- hotel 2
-- hotel 3
+- hotel
+- hotel
+- hotel
 
 Restaurants:
-- restaurant 1
-- restaurant 2
-- restaurant 3
+- restaurant
+- restaurant
+- restaurant
 
 Travel Tips:
 - tip
 - tip
 - tip
+
+IMPORTANT:
+- Do not skip headings.
+- Use bullet points for everything.
+- Do not write long paragraphs.
 `;
 
     const response = await axios.post(
