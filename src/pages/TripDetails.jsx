@@ -257,398 +257,195 @@ function TripDetails() {
 
         {/* ITINERARY */}
 
-        <div className="space-y-6">
+<div className="space-y-5">
 
-          {lines.map((line, index) => {
+  {lines.map((line, index) => {
 
-            const lower =
-              line.toLowerCase().trim();
+    const lower =
+      line.toLowerCase().trim();
 
-            const isDay =
-  lower.startsWith("day");
+    const cleanedLine = line
+      .replace("- hotel:", "• ")
+      .replace("- restaurant:", "• ")
+      .replace("- tip:", "• ")
+      .replace("- item:", "• ")
+      .replace("- local currency:", "Indian Rupee (INR)")
+      .replace("- main language:", "")
+      .replace("- best season:", "")
+      .replace("- weather info:", "")
+      .trim();
 
-const isMorning =
-  lower.startsWith("morning");
+    const isDay =
+      lower.startsWith("day");
 
-const isAfternoon =
-  lower.startsWith("afternoon");
+    const isMorning =
+      lower.startsWith("morning");
 
-const isEvening =
-  lower.startsWith("evening");
+    const isAfternoon =
+      lower.startsWith("afternoon");
 
-const isHotels =
-  lower.startsWith("recommended hotels") ||
-  lower.startsWith("hotels");
+    const isEvening =
+      lower.startsWith("evening");
 
-const isRestaurants =
-  lower.startsWith("restaurants");
+    const isBestTimeHeading =
+      lower.includes("best time");
 
-const isTips =
-  lower.startsWith("travel tips");
+    const isCurrencyHeading =
+      lower.includes("currency");
 
-const isBestTime =
-  lower.startsWith("best time");
+    const isLanguageHeading =
+      lower.includes("language");
 
-const isCurrency =
-  lower.startsWith("currency");
+    const isPackingHeading =
+      lower.includes("packing");
 
-const isLanguage =
-  lower.startsWith("language");
+    const isHotelsHeading =
+      lower.includes("recommended hotels");
 
-const isPacking =
-  lower.includes("packing");
+    const isRestaurantsHeading =
+      lower.includes("restaurants");
 
-const cleanedLine = line
-  .replace("Best Time:", "")
-  .replace("Currency:", "")
-  .replace("Language:", "")
-  .replace("Packing:", "")
-  .replace("Hotels:", "")
-  .replace("Recommended Hotels:", "")
-  .replace("Restaurants:", "")
-  .replace("Restaurants/Cafes:", "")
-  .replace("Travel Tips:", "")
-  .replace("🏨 Recommended Hotels", "")
-  .replace("🍜 Restaurants & Cafes", "")
-  .replace("🌍 Travel Tips", "")
-  .trim();
+    const isTipsHeading =
+      lower.includes("travel tips");
 
-            if (
-              lower === "best time:" ||
-              lower === "currency:" ||
-              lower === "language:" ||
-              lower === "restaurants/cafes:" ||
-              lower === "travel tips:" ||
-              lower === "hotels:" ||
-              lower === "packing:"
-            ) {
-              return null;
-            }
+    if (isDay) {
 
-            if (isDay) {
+      return (
 
-              return (
+        <div
+          key={index}
+          className="bg-gradient-to-r from-orange-400 to-pink-500 text-white rounded-[28px] px-7 py-5 text-3xl font-bold shadow-xl"
+        >
 
-                <div
-                  key={index}
-                  className="bg-gradient-to-r from-orange-400 to-pink-500 text-white rounded-[28px] px-7 py-5 text-3xl font-bold shadow-xl"
-                >
-
-                  📅 {line}
-
-                </div>
-
-              );
-            }
-
-            if (isMorning) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-yellow-50 border border-yellow-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-yellow-900 mb-3">
-
-                    🌅 Morning
-
-                  </h3>
-
-                  <p className="text-lg text-yellow-800 leading-relaxed">
-
-                    {line.replace("Morning:", "")}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isAfternoon) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-orange-50 border border-orange-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-orange-900 mb-3">
-
-                    ☀️ Afternoon
-
-                  </h3>
-
-                  <p className="text-lg text-orange-800 leading-relaxed">
-
-                    {line.replace("Afternoon:", "")}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isEvening) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-purple-50 border border-purple-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-purple-900 mb-3">
-
-                    🌙 Evening
-
-                  </h3>
-
-                  <p className="text-lg text-purple-800 leading-relaxed">
-
-                    {line.replace("Evening:", "")}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isHotels) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-blue-50 border border-blue-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-blue-900 mb-3">
-
-                    🏨 Recommended Hotels
-
-                  </h3>
-
-                  <p className="text-lg text-blue-800 leading-relaxed">
-
-                    {cleanedLine
-  .split(",")
-  .filter((item) => item.trim() !== "")
-  .map((item, i) => (
-    <p key={i} className="mb-2">
-      • {item.trim()}
-    </p>
-))}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isRestaurants) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-pink-50 border border-pink-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-pink-900 mb-3">
-
-                    🍜 Restaurants & Cafes
-
-                  </h3>
-
-                  <p className="text-lg text-pink-800 leading-relaxed">
-
-                    {cleanedLine
-  .split(",")
-  .filter((item) => item.trim() !== "")
-  .map((item, i) => (
-    <p key={i} className="mb-2">
-      • {item.trim()}
-    </p>
-))}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isTips) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-green-50 border border-green-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-green-900 mb-3">
-
-                    🌍 Travel Tips
-
-                  </h3>
-
-                  <p className="text-lg text-green-800 leading-relaxed">
-
-                    {cleanedLine
-  .split(",")
-  .filter((item) => item.trim() !== "")
-  .map((item, i) => (
-    <p key={i} className="mb-2">
-      • {item.trim()}
-    </p>
-))  }
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isBestTime) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-cyan-50 border border-cyan-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-cyan-900 mb-3">
-
-                    🌤️ Best Time To Visit
-
-                  </h3>
-
-                  <p className="text-lg text-cyan-800 leading-relaxed">
-
-                    {cleanedLine}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isCurrency) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-emerald-50 border border-emerald-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-emerald-900 mb-3">
-
-                    💱 Currency
-
-                  </h3>
-
-                  <p className="text-lg text-emerald-800 leading-relaxed">
-
-                    {cleanedLine}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isLanguage) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-indigo-50 border border-indigo-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-indigo-900 mb-3">
-
-                    🗣️ Language
-
-                  </h3>
-
-                  <p className="text-lg text-indigo-800 leading-relaxed">
-
-                    {cleanedLine}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            if (isPacking) {
-
-              return (
-
-                <div
-                  key={index}
-                  className="bg-amber-50 border border-amber-200 rounded-[24px] p-6 shadow-sm"
-                >
-
-                  <h3 className="text-2xl font-bold text-amber-900 mb-3">
-
-                    🎒 Packing Checklist
-
-                  </h3>
-
-                  <p className="text-lg text-amber-800 leading-relaxed">
-
-                    {cleanedLine
-  .split(",")
-  .filter((item) => item.trim() !== "")
-  .map((item, i) => (
-    <p key={i} className="mb-2">
-      • {item.trim()}
-    </p>
-))}
-
-                  </p>
-
-                </div>
-
-              );
-            }
-
-            return (
-
-              <div
-                key={index}
-                className="bg-white rounded-[24px] p-6 border border-orange-100 shadow-sm"
-              >
-
-                <p className="text-lg text-neutral-700 leading-relaxed">
-
-                  {line}
-
-                </p>
-
-              </div>
-
-            );
-
-          })}
+          📅 {line}
 
         </div>
+
+      );
+    }
+
+    if (isMorning) {
+
+      return (
+
+        <div
+          key={index}
+          className="bg-yellow-50 border border-yellow-200 rounded-[24px] p-5"
+        >
+
+          <h3 className="text-2xl font-bold text-yellow-900 mb-2">
+
+            🌅 Morning
+
+          </h3>
+
+          <p className="text-lg text-yellow-800 whitespace-pre-line">
+
+            {line.replace("Morning:", "")}
+
+          </p>
+
+        </div>
+
+      );
+    }
+
+    if (isAfternoon) {
+
+      return (
+
+        <div
+          key={index}
+          className="bg-orange-50 border border-orange-200 rounded-[24px] p-5"
+        >
+
+          <h3 className="text-2xl font-bold text-orange-900 mb-2">
+
+            ☀️ Afternoon
+
+          </h3>
+
+          <p className="text-lg text-orange-800 whitespace-pre-line">
+
+            {line.replace("Afternoon:", "")}
+
+          </p>
+
+        </div>
+
+      );
+    }
+
+    if (isEvening) {
+
+      return (
+
+        <div
+          key={index}
+          className="bg-purple-50 border border-purple-200 rounded-[24px] p-5"
+        >
+
+          <h3 className="text-2xl font-bold text-purple-900 mb-2">
+
+            🌙 Evening
+
+          </h3>
+
+          <p className="text-lg text-purple-800 whitespace-pre-line">
+
+            {line.replace("Evening:", "")}
+
+          </p>
+
+        </div>
+
+      );
+    }
+
+    if (
+      isBestTimeHeading ||
+      isCurrencyHeading ||
+      isLanguageHeading ||
+      isPackingHeading ||
+      isHotelsHeading ||
+      isRestaurantsHeading ||
+      isTipsHeading
+    ) {
+
+      return (
+
+        <h2
+          key={index}
+          className="text-2xl font-bold text-neutral-900 mt-6"
+        >
+
+          {line}
+
+        </h2>
+
+      );
+    }
+
+    return (
+
+      <div
+        key={index}
+        className="text-lg text-neutral-700 leading-relaxed whitespace-pre-line px-2"
+      >
+
+        <div className="font-medium">
+
+          {cleanedLine}
+
+        </div>
+
+      </div>
+
+    );
+
+  })}
+
+</div>
 
       </div>
 
