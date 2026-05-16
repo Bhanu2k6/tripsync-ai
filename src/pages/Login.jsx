@@ -1,9 +1,36 @@
-import { signInWithGoogle } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  signInWithGoogle,
+  getGoogleRedirectResult,
+} from "../services/authService";
 
 function Login() {
 
   const navigate = useNavigate();
+  useEffect(() => {
+
+  const checkLogin = async () => {
+
+    const user =
+      await getGoogleRedirectResult();
+
+    if (user) {
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
+
+      navigate("/");
+
+    }
+
+  };
+
+  checkLogin();
+
+}, []);
   const handleGoogleLogin = async () => {
 
     const user = await signInWithGoogle();

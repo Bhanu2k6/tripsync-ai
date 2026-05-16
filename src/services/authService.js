@@ -1,36 +1,48 @@
 import {
-  getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 
-import { app } from "../firebase/firebaseConfig";
+import { auth } from "./firebase";
 
-const auth = getAuth(app);
-
-const provider = new GoogleAuthProvider();
+const provider =
+  new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
+
   try {
 
-    const result = await signInWithPopup(auth, provider);
-
-    return result.user;
+    await signInWithRedirect(
+      auth,
+      provider
+    );
 
   } catch (error) {
 
     console.log(error);
+
   }
+
 };
 
-export const logoutUser = async () => {
+export const getGoogleRedirectResult = async () => {
+
   try {
 
-    await signOut(auth);
+    const result =
+      await getRedirectResult(auth);
+
+    if (result?.user) {
+
+      return result.user;
+
+    }
 
   } catch (error) {
 
     console.log(error);
+
   }
+
 };
