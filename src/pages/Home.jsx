@@ -1,9 +1,11 @@
 import Navbar from "../components/Navbar";
 import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 function Home() {
 
   const navigate = useNavigate();
+
   const destinations = [
     {
       name: "Paris",
@@ -250,7 +252,7 @@ function Home() {
 
           <button
             onClick={() => {
-              window.location.href = "/create-trip";
+              navigate("/create-trip");
             }}
             className="bg-gradient-to-r from-orange-400 to-pink-500 text-white px-8 py-5 rounded-3xl text-xl font-bold shadow-xl hover:scale-105 transition"
           >
